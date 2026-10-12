@@ -1,4 +1,4 @@
-﻿DateTime,Location,SiteName,dB(A),Zone,Period,DurationMinutes,MeterMethod,Notes,Source
+DateTime,Location,SiteName,dB(A),Zone,Period,DurationMinutes,MeterMethod,Notes,Source
 2026-10-12T08:00,College,Construction area - Moderate work,72,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
 2026-10-12T09:00,College,Construction area - Drilling/cutting,84,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
 2026-10-12T10:00,College,Construction area - Heavy machinery,88,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
