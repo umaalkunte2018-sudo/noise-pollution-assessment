@@ -55,7 +55,7 @@
 
   <section id="readings" class="section">
     <div class="panel">
-      <div class="panel-head"><div><h2>Reading register</h2><div class="sub">Filter, review, and delete records stored in this browser.</div></div><button class="btn" id="readingsCsvBtn">Export filtered CSV</button></div>
+      <div class="panel-head"><div><h2>Reading register</h2><div class="sub">Filter, review, import, and delete records stored in this browser.</div></div><div class="header-actions"><button class="btn" id="importCsvBtn">Import CSV</button><input class="hidden" type="file" id="importCsvFile" accept=".csv,text/csv"><button class="btn" id="readingsCsvBtn">Export filtered CSV</button></div></div>
       <div class="filters">
         <div class="field"><label for="filterLocation">Location</label><select id="filterLocation"><option value="">All locations</option><option>College</option><option>Hospital</option><option>Traffic Junction</option></select></div>
         <div class="field"><label for="filterSource">Record type</label><select id="filterSource"><option value="">All records</option><option value="manual">Manual</option><option value="simulated">Simulated demo</option></select></div>
@@ -194,6 +194,60 @@
   function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
   function exportCSV(rows){const header=['DateTime','Location','SiteName','dB(A)','Zone','Period','ConfiguredLimit_dB(A)','Status','Source','DurationMinutes','MeterMethod','Notes'];const lines=[header,...rows.map(r=>[r.dateTime,r.location,r.siteName,r.db,limits[r.zone]?.label||r.zone,r.period,limitFor(r),statusFor(r).label,r.source,r.duration??'',r.meter,r.notes])].map(row=>row.map(csvEscape).join(','));const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='noisewatch-readings-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
   $('exportCsvBtn').addEventListener('click',()=>exportCSV(allFiltered()));$('readingsCsvBtn').addEventListener('click',()=>exportCSV(allFiltered(getReadFilter())));
+
+  // Import CSV produced by NoiseWatch exports or the supplied sample template.
+  function parseCSVText(text){
+    const rows=[]; let row=[], field='', quoted=false;
+    for(let i=0;i<text.length;i++){
+      const c=text[i], next=text[i+1];
+      if(c==='"' && quoted && next==='"'){field+='"';i++;}
+      else if(c==='"'){quoted=!quoted;}
+      else if(c===',' && !quoted){row.push(field);field='';}
+      else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&next==='\n')i++;row.push(field);if(row.some(x=>x.trim()!==''))rows.push(row);row=[];field='';}
+      else field+=c;
+    }
+    if(field.length||row.length){row.push(field);if(row.some(x=>x.trim()!==''))rows.push(row);}
+    return rows;
+  }
+  $('importCsvBtn').addEventListener('click',()=>$('importCsvFile').click());
+  $('importCsvFile').addEventListener('change',async e=>{
+    const file=e.target.files?.[0]; if(!file)return;
+    try{
+      const raw=await file.text(); const parsed=parseCSVText(raw.replace(/^\uFEFF/,''));
+      if(parsed.length<2)throw new Error('CSV file has no data rows.');
+      const headers=parsed[0].map(h=>h.trim().toLowerCase());
+      const idx=(...names)=>headers.findIndex(h=>names.includes(h));
+      const dateI=idx('datetime','date time','date_time','date');
+      const locI=idx('location');
+      const siteI=idx('sitename','site name','site');
+      const dbI=idx('db(a)','db','noise reading','reading');
+      const zoneI=idx('zone','area category');
+      const periodI=idx('period','day/night');
+      const durationI=idx('durationminutes','duration minutes','duration');
+      const meterI=idx('metermethod','meter / method','meter');
+      const notesI=idx('notes','observations');
+      const sourceI=idx('source','record type');
+      if(dateI<0||locI<0||dbI<0)throw new Error('Required columns are missing. Need DateTime, Location, and dB(A). Use the supplied NoiseWatch CSV template.');
+      const imported=[];
+      for(let n=1;n<parsed.length;n++){
+        const row=parsed[n]; const get=i=>i<0?'':(row[i]??'').trim();
+        const rawDate=get(dateI); let dt=rawDate;
+        if(/^\d{4}-\d{2}-\d{2}$/.test(rawDate))dt=rawDate+'T12:00';
+        if(dt&&!dt.includes('T'))dt=dt.replace(' ','T').slice(0,16);
+        const loc=locations.includes(get(locI))?get(locI):'College';
+        const db=Number(get(dbI));
+        if(!dt||!Number.isFinite(new Date(dt).getTime())||!Number.isFinite(db)||db<20||db>160)continue;
+        let zone=get(zoneI).toLowerCase();
+        if(zone.includes('silence'))zone='silence';else if(zone.includes('residential'))zone='residential';else if(zone.includes('commercial'))zone='commercial';else if(zone.includes('industrial'))zone='industrial';else zone=loc==='Hospital'?'silence':loc==='Traffic Junction'?'commercial':'residential';
+        let period=get(periodI).toLowerCase(); period=period.includes('night')?'night':'day';
+        imported.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()),dateTime:dt,location:loc,siteName:get(siteI)||'Imported site',db,zone,period,duration:get(durationI)?Number(get(durationI)):null,meter:get(meterI),notes:get(notesI),source:get(sourceI).toLowerCase().includes('simulated')?'simulated':'manual'});
+      }
+      if(!imported.length)throw new Error('No valid data rows found. Check the date and dB columns.');
+      records.push(...imported);saveRecords();renderAll();alert(`Imported ${imported.length} reading(s). Please review the location, date/time, zone and period in the Readings tab.`);tab('readings');
+    }catch(err){alert('CSV import failed: '+err.message);}
+    e.target.value='';
+  });
+
   $('loadDemoBtn').addEventListener('click',()=>{if(!confirm('Add clearly labelled simulated demonstration records? These are not real measurements.'))return;const now=new Date();const demo=[['College','Main gate',62,'commercial','day',-3],['College','Library courtyard',48,'silence','day',-1],['Hospital','Emergency entrance',59,'silence','day',-2],['Hospital','Side street',43,'residential','night',-1],['Traffic Junction','Signal crossing',78,'commercial','day',0],['Traffic Junction','Bus stop',71,'commercial','day',-4],['College','Classroom block',46,'residential','day',-5],['Traffic Junction','Roadside after 10 pm',61,'commercial','night',-2]];
     demo.forEach((d,i)=>{const dt=new Date(now.getTime()-(demo.length-i)*3600000);records.push({id:'demo-'+Date.now()+'-'+i,dateTime:localISO(dt),location:d[0],siteName:d[1],db:d[2],zone:d[3],period:d[4],duration:15,meter:'SIMULATED — not measured',notes:'Simulated sample data for interface demonstration only.',source:'simulated'});});saveRecords();renderAll();alert('Demo records added. They are labelled SIMULATED and are not real measurements.');});
   $('clearDataBtn').addEventListener('click',()=>{if(confirm('Permanently delete all readings saved in this browser? Export CSV first if you need a backup.')){records=[];saveRecords();renderAll();}});

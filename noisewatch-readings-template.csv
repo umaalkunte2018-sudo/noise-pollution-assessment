@@ -1,0 +1,37 @@
+﻿DateTime,Location,SiteName,dB(A),Zone,Period,DurationMinutes,MeterMethod,Notes,Source
+2026-10-12T08:00,College,Construction area - Moderate work,72,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T09:00,College,Construction area - Drilling/cutting,84,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T10:00,College,Construction area - Heavy machinery,88,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T11:00,College,Construction area - Construction work,82,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T12:00,College,Construction area - Moderate work,76,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T13:00,College,Construction area - Low activity,70,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T14:00,College,Construction area - Construction work,80,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T15:00,College,Construction area - Drilling/cutting,87,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T16:00,College,Construction area - Heavy machinery,89,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T17:00,College,Construction area - Moderate work,78,industrial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and area category.,manual
+2026-10-12T08:00,Traffic Junction,Moderate traffic,60,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T09:00,Traffic Junction,Heavy traffic,64,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T10:00,Traffic Junction,Hospital activity,57,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T11:00,Traffic Junction,Moderate traffic,55,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T12:00,Traffic Junction,Low traffic,53,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T13:00,Traffic Junction,Low activity,51,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T14:00,Traffic Junction,Moderate traffic,56,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T15:00,Traffic Junction,Hospital activity,54,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T16:00,Traffic Junction,Moderate traffic,59,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T17:00,Traffic Junction,Heavy traffic,63,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T08:00,Traffic Junction,Heavy traffic,78,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T09:00,Traffic Junction,Heavy traffic,82,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T10:00,Traffic Junction,Moderate,74,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T12:00,Traffic Junction,Low-moderate,69,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T14:00,Traffic Junction,Moderate,71,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T16:00,Traffic Junction,Moderate-heavy,76,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T17:00,Traffic Junction,Heavy traffic,81,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T18:00,Traffic Junction,Heavy traffic,84,commercial,day,1,Sound meter app (approximate; phone app),User-provided displayed reading; confirm actual measurement date and site.,manual
+2026-10-12T10:00,College,College Main Gate,76,commercial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,College Road,74,commercial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,College Bus Stop,78,commercial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,Hospital,Nearby Hospital Area,58,silence,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,Construction Area,84,industrial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,College Parking,70,commercial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,Canteen Area,68,commercial,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual
+2026-10-12T10:00,College,Residential Area,62,residential,day,1,Sound meter app (approximate; phone app),Separate spot reading from user-provided table; time shown as 10:00 placeholder—edit to actual measurement time.,manual

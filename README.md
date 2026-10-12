@@ -7,7 +7,7 @@ A static, browser-based project for recording and analysing manually collected n
 - Trend chart and average-by-location chart
 - Manual reading form with date/time, site, dB(A), zone, day/night period, duration, meter/method, and notes
 - Filters and reading register
-- CSV export
+- CSV import and export (import accepts NoiseWatch CSV exports or a CSV with DateTime, Location, dB(A), plus optional site/zone/period/notes columns)
 - Report generation with Print / Save as PDF and Copy text
 - Editable comparison values
 - Browser-local storage; no server or account required
@@ -25,7 +25,7 @@ Open `index.html` in a modern browser. An internet connection is needed to load 
 
 ## Deploy to GitHub Pages
 1. Sign in to GitHub and create a **public** repository named `noise-pollution-assessment`.
-2. Upload `index.html` and `README.md` to the repository root (or use **Add file → Upload files**).
+2. Upload/replace `index.html` and `README.md` to the repository root (or use **Add file → Upload files**).
 3. Open **Settings → Pages**.
 4. Under **Build and deployment**, select **Deploy from a branch**.
 5. Choose branch `main` and folder `/(root)`, then click **Save**.
