@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>NoiseWatch | Noise Pollution Assessment</title>
+  <meta name="description" content="Noise pollution assessment dashboard for colleges, hospitals, and traffic junctions.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    :root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#667085;--line:#e5eaf2;--blue:#2457d6;--blue-soft:#eaf0ff;--green:#13795b;--amber:#a45b00;--red:#b42318;--shadow:0 8px 24px rgba(25,42,70,.05)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1440px;margin:auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--blue);color:white;font-size:22px;font-weight:800}.brand h1{font-size:21px;margin:0;letter-spacing:-.5px}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}.header-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;color:var(--ink);font-weight:650}.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.danger{color:var(--red)}.btn:hover{filter:brightness(.98)}
+    .notice{padding:12px 15px;border:1px solid #d8e3ff;background:#f0f5ff;border-radius:12px;color:#30436b;margin-bottom:20px;font-size:13px}.notice strong{color:#1f3f94}
+    .tabs{display:flex;gap:6px;padding:5px;background:#e9edf5;border-radius:12px;width:max-content;max-width:100%;overflow:auto;margin-bottom:20px}.tab{border:0;background:transparent;color:#596579;padding:9px 14px;border-radius:9px;font-weight:700;white-space:nowrap}.tab.active{background:#fff;color:var(--blue);box-shadow:0 2px 7px #14213d12}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.metric{padding:18px}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;font-weight:650}.metric-icon{display:grid;place-items:center;width:34px;height:34px;background:var(--blue-soft);color:var(--blue);border-radius:10px;font-size:17px}.metric-value{font-size:29px;font-weight:800;letter-spacing:-1px;margin:12px 0 2px}.metric-foot{color:var(--muted);font-size:12px}
+    .layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:18px;margin-bottom:18px}.panel{padding:20px;min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}.panel h2{font-size:16px;margin:0;letter-spacing:-.2px}.sub{color:var(--muted);font-size:12px;margin-top:4px}.chart-wrap{height:275px;position:relative}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;white-space:nowrap}.pill.good{background:#e7f7ef;color:var(--green)}.pill.warn{background:#fff2d9;color:var(--amber)}.pill.bad{background:#ffebe9;color:var(--red)}.pill.neutral{background:#eef2f7;color:#566174}
+    .site-list{display:grid;gap:12px}.site-row{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:12px}.site-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);flex:none}.site-info{flex:1;min-width:0}.site-info strong{display:block;font-size:13px}.site-info span{display:block;font-size:11px;color:var(--muted)}.site-db{text-align:right;font-size:19px;font-weight:800}.site-db small{display:block;font-size:10px;color:var(--muted);font-weight:500}
+    .section{display:none}.section.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field label{font-size:12px;font-weight:750;color:#4b5669}.field input,.field select,.field textarea{width:100%;border:1px solid #d9e0ea;background:#fff;border-radius:9px;padding:10px 11px;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7192ef;box-shadow:0 0 0 3px #2457d61a}.field textarea{resize:vertical;min-height:76px}.filters .field{min-width:170px;flex:1}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:760px;background:white}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12px}th{color:#647084;background:#f8faff;font-weight:800;white-space:nowrap}td{color:#293449}tr:last-child td{border-bottom:0}.empty{text-align:center;padding:32px;color:var(--muted)}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.form-grid .full{grid-column:1/-1}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}.help{font-size:12px;color:var(--muted);margin-top:6px}.report-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}.summary-box{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fbfcff}.summary-box span{display:block;color:var(--muted);font-size:11px}.summary-box strong{font-size:22px;display:block;margin-top:4px}.report-copy{white-space:pre-wrap;background:#fbfcff;border:1px solid var(--line);padding:16px;border-radius:12px;font-size:13px;min-height:120px}.foot{color:var(--muted);font-size:11px;text-align:center;padding:24px 10px 8px}.hidden{display:none!important}
+    @media(max-width:950px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}@media(max-width:600px){.app{padding:14px}.header-actions{width:100%}header{align-items:flex-start;flex-direction:column}.metrics{gap:10px}.metric{padding:14px}.metric-value{font-size:24px}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.report-summary{grid-template-columns:1fr 1fr}.tabs{width:100%}}
+    @media print{body{background:white}.app{max-width:none;padding:0}.header-actions,.tabs,.notice,.no-print,.btn{display:none!important}.section{display:none!important}.section.active{display:block!important}.panel,.metric{box-shadow:none;break-inside:avoid}.panel{border:1px solid #ddd}.foot{padding:8px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><div class="logo">N</div><div><h1>NoiseWatch</h1><p>Noise Pollution Assessment Dashboard</p></div></div>
+    <div class="header-actions"><button class="btn" id="exportCsvBtn">Export CSV</button><button class="btn primary" id="addTopBtn">＋ Add reading</button></div>
+  </header>
+  <div class="notice"><strong>Assessment note:</strong> This app stores manual sound-meter readings in this browser only. Demonstration records are clearly labelled as simulated. For formal assessment, use a suitable calibrated sound level meter and verify the applicable CPCB / Noise Pollution (Regulation and Control) Rules limits for the area's zone and time.</div>
+  <nav class="tabs" aria-label="Main navigation">
+    <button class="tab active" data-tab="overview">Overview</button><button class="tab" data-tab="readings">Readings</button><button class="tab" data-tab="add">Add reading</button><button class="tab" data-tab="reports">Reports</button><button class="tab" data-tab="settings">Settings & help</button>
+  </nav>
+
+  <section id="overview" class="section active">
+    <div class="metrics">
+      <div class="metric"><div class="metric-top">Average noise level <span class="metric-icon">〰</span></div><div class="metric-value" id="avgMetric">—</div><div class="metric-foot">Arithmetic average of listed dB readings</div></div>
+      <div class="metric"><div class="metric-top">Highest reading <span class="metric-icon">↑</span></div><div class="metric-value" id="maxMetric">—</div><div class="metric-foot" id="maxFoot">Across current records</div></div>
+      <div class="metric"><div class="metric-top">Records captured <span class="metric-icon">▤</span></div><div class="metric-value" id="countMetric">0</div><div class="metric-foot" id="simFoot">Includes simulated records if enabled</div></div>
+      <div class="metric"><div class="metric-top">Above selected limit <span class="metric-icon">!</span></div><div class="metric-value" id="overMetric">0</div><div class="metric-foot">Based on each record's selected zone and period</div></div>
+    </div>
+    <div class="layout">
+      <div class="panel"><div class="panel-head"><div><h2>Noise levels over time</h2><div class="sub">Recorded dB(A) values by date and time</div></div><span class="pill neutral" id="chartCount">0 records</span></div><div class="chart-wrap"><canvas id="trendChart" aria-label="Noise levels over time chart"></canvas></div></div>
+      <div class="panel"><div class="panel-head"><div><h2>Average by location</h2><div class="sub">Compare assessment areas</div></div></div><div class="chart-wrap"><canvas id="locationChart" aria-label="Average noise by location chart"></canvas></div></div>
+    </div>
+    <div class="layout">
+      <div class="panel"><div class="panel-head"><div><h2>Latest readings</h2><div class="sub">Most recently entered records</div></div><button class="btn" data-goto="readings">View all</button></div><div id="latestList" class="site-list"></div></div>
+      <div class="panel"><div class="panel-head"><div><h2>How to interpret results</h2><div class="sub">Screening aid, not a legal compliance certificate</div></div></div><div style="display:grid;gap:12px"><div><span class="pill good">Within selected limit</span><p class="sub">The entered value is at or below the illustrative limit configured for that zone and period.</p></div><div><span class="pill warn">Near limit</span><p class="sub">The reading is within 5 dB of the configured limit. Review sampling conditions.</p></div><div><span class="pill bad">Above selected limit</span><p class="sub">The entered value exceeds the configured limit; confirm with repeat measurements.</p></div><p class="help">Noise is often evaluated using equivalent continuous sound level, LAeq, over a defined period. A single spot reading is not equivalent to a full-period LAeq assessment.</p></div></div>
+    </div>
+  </section>
+
+  <section id="readings" class="section">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Reading register</h2><div class="sub">Filter, review, and delete records stored in this browser.</div></div><button class="btn" id="readingsCsvBtn">Export filtered CSV</button></div>
+      <div class="filters">
+        <div class="field"><label for="filterLocation">Location</label><select id="filterLocation"><option value="">All locations</option><option>College</option><option>Hospital</option><option>Traffic Junction</option></select></div>
+        <div class="field"><label for="filterSource">Record type</label><select id="filterSource"><option value="">All records</option><option value="manual">Manual</option><option value="simulated">Simulated demo</option></select></div>
+        <div class="field"><label for="filterFrom">From date</label><input type="date" id="filterFrom"></div>
+        <div class="field"><label for="filterTo">To date</label><input type="date" id="filterTo"></div>
+        <div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="btn" id="clearFiltersBtn">Clear filters</button></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Date & time</th><th>Location / site</th><th>dB(A)</th><th>Zone / period</th><th>Limit</th><th>Status</th><th>Source</th><th>Action</th></tr></thead><tbody id="readingsBody"></tbody></table></div>
+      <p class="help">CSV exports include the selected zone, period, configured limit, status, and source label.</p>
+    </div>
+  </section>
+
+  <section id="add" class="section">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Add noise reading</h2><div class="sub">Enter a reading taken with a sound level meter.</div></div><span class="pill neutral">Manual entry</span></div>
+      <form id="readingForm">
+        <div class="form-grid">
+          <div class="field"><label for="dateTime">Date and time *</label><input type="datetime-local" id="dateTime" required></div>
+          <div class="field"><label for="location">Assessment location *</label><select id="location" required><option value="College">College</option><option value="Hospital">Hospital</option><option value="Traffic Junction">Traffic Junction</option></select></div>
+          <div class="field"><label for="siteName">Site / landmark *</label><input id="siteName" placeholder="e.g., Main gate, 10 m from road" required maxlength="100"></div>
+          <div class="field"><label for="dbValue">Sound level dB(A) *</label><input type="number" id="dbValue" min="20" max="160" step="0.1" placeholder="e.g., 68.5" required><div class="help">Enter the value shown by your meter; do not estimate if this is a formal study.</div></div>
+          <div class="field"><label for="zone">Area category *</label><select id="zone" required><option value="silence">Silence zone (illustrative)</option><option value="residential">Residential</option><option value="commercial">Commercial</option><option value="industrial">Industrial</option></select></div>
+          <div class="field"><label for="period">Measurement period *</label><select id="period" required><option value="day">Day (6:00–22:00)</option><option value="night">Night (22:00–6:00)</option></select></div>
+          <div class="field"><label for="duration">Measurement duration (minutes)</label><input type="number" id="duration" min="0.1" max="1440" step="0.1" placeholder="e.g., 15"></div>
+          <div class="field"><label for="meter">Meter / method</label><input id="meter" placeholder="e.g., Class 2 sound level meter"></div>
+          <div class="field full"><label for="notes">Observations / conditions</label><textarea id="notes" placeholder="Traffic flow, construction, weather, distance from source, etc."></textarea></div>
+        </div>
+        <div class="notice" style="margin-top:16px;margin-bottom:0"><strong>Limit reference:</strong> The default comparison values follow commonly published Indian ambient noise standards (day/night dB(A) Leq): Industrial 75/70, Commercial 65/55, Residential 55/45, Silence 50/40. Verify current official rules and whether the exact location qualifies as a notified silence zone before using these values in a formal report.</div>
+        <div class="form-actions"><button type="reset" class="btn" id="resetFormBtn">Clear form</button><button class="btn primary" type="submit">Save reading</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="reports" class="section">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Assessment report</h2><div class="sub">Generate a summary for the currently filtered records.</div></div><div class="header-actions"><button class="btn" id="copyReportBtn">Copy text</button><button class="btn primary" id="printReportBtn">Print / Save PDF</button></div></div>
+      <div class="filters"><div class="field"><label for="reportLocation">Location</label><select id="reportLocation"><option value="">All locations</option><option>College</option><option>Hospital</option><option>Traffic Junction</option></select></div><div class="field"><label for="reportFrom">From date</label><input type="date" id="reportFrom"></div><div class="field"><label for="reportTo">To date</label><input type="date" id="reportTo"></div><div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="btn" id="generateReportBtn">Refresh report</button></div></div>
+      <div class="report-summary"><div class="summary-box"><span>Records in report</span><strong id="reportCount">0</strong></div><div class="summary-box"><span>Mean level</span><strong id="reportMean">—</strong></div><div class="summary-box"><span>Above configured limit</span><strong id="reportExceed">0</strong></div></div>
+      <div id="reportText" class="report-copy">Add readings to generate a report.</div>
+      <p class="help">Report wording is descriptive and depends on the records entered. It is not a substitute for a qualified environmental assessment or an official compliance determination.</p>
+    </div>
+  </section>
+
+  <section id="settings" class="section">
+    <div class="layout">
+      <div class="panel"><h2>Configured comparison limits</h2><div class="sub">Editable local comparison values in dB(A) Leq. Changes affect status labels and reports.</div><div class="table-wrap" style="margin-top:14px"><table style="min-width:360px"><thead><tr><th>Area category</th><th>Day</th><th>Night</th></tr></thead><tbody id="limitsBody"></tbody></table></div><div class="form-actions"><button class="btn" id="resetLimitsBtn">Restore defaults</button><button class="btn primary" id="saveLimitsBtn">Save limits</button></div></div>
+      <div class="panel"><h2>Data, limitations & methodology</h2><div style="display:grid;gap:12px;margin-top:14px"><p class="sub">• Records are saved in your browser using local storage. They do not automatically sync across devices.</p><p class="sub">• Export CSV regularly as a backup. Clearing browser storage may erase your records.</p><p class="sub">• The dashboard uses manual values only. It does not measure sound by itself.</p><p class="sub">• If microphone functionality is added later, phone/laptop microphone levels are approximate unless calibrated and validated; they should not be treated as certified dB(A) readings.</p><p class="sub">• Use consistent sampling duration, microphone height, distance, weather notes, and meter settings. Note unusual events.</p><p class="sub">• For India, verify the Noise Pollution (Regulation and Control) Rules, applicable amendments, CPCB guidance, and local notifications before concluding compliance.</p></div><div class="form-actions"><button class="btn danger" id="clearDataBtn">Delete all records</button><button class="btn" id="loadDemoBtn">Load labelled demo data</button></div></div>
+    </div>
+  </section>
+  <div class="foot">NoiseWatch · Educational assessment tool · Data stays in this browser · Always verify official limits before reporting</div>
+</div>
+<script>
+(() => {
+  const STORE_KEY = 'noisewatch.records.v1';
+  const LIMIT_KEY = 'noisewatch.limits.v1';
+  const DEFAULT_LIMITS = {
+    industrial:{label:'Industrial',day:75,night:70},
+    commercial:{label:'Commercial',day:65,night:55},
+    residential:{label:'Residential',day:55,night:45},
+    silence:{label:'Silence zone',day:50,night:40}
+  };
+  const locations = ['College','Hospital','Traffic Junction'];
+  let limits = loadLimits();
+  let records = loadRecords();
+  let trendChart = null, locationChart = null;
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const localISO = date => { const d = new Date(date.getTime()-date.getTimezoneOffset()*60000); return d.toISOString().slice(0,16); };
+  function loadRecords(){ try { const v=JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); return Array.isArray(v)?v:[]; } catch { return []; } }
+  function loadLimits(){ try { const v=JSON.parse(localStorage.getItem(LIMIT_KEY)||'null'); return v? v : structuredClone(DEFAULT_LIMITS); } catch { return structuredClone(DEFAULT_LIMITS); } }
+  function saveRecords(){ localStorage.setItem(STORE_KEY,JSON.stringify(records)); }
+  function saveLimits(){ localStorage.setItem(LIMIT_KEY,JSON.stringify(limits)); }
+  function limitFor(r){ return Number(limits[r.zone]?.[r.period] ?? 0); }
+  function statusFor(r){ const diff=Number(r.db)-limitFor(r); if(diff>0) return {label:'Above limit',cls:'bad'}; if(diff>=-5) return {label:'Near limit',cls:'warn'}; return {label:'Within limit',cls:'good'}; }
+  function fmtDate(s){ const d=new Date(s); return isNaN(d)?String(s):d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'}); }
+  function fmtDb(v){ return Number.isFinite(Number(v))?`${Number(v).toFixed(1)} dB(A)`:'—'; }
+  function allFiltered({location='',source='',from='',to=''}={}) {
+    return records.filter(r => (!location||r.location===location)&&(!source||r.source===source)&&(!from||r.dateTime.slice(0,10)>=from)&&(!to||r.dateTime.slice(0,10)<=to)).sort((a,b)=>a.dateTime.localeCompare(b.dateTime));
+  }
+  function tab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===name)); if(name==='reports') renderReport(); if(name==='overview') renderOverview(); }
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+  document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.goto)));
+  $('addTopBtn').addEventListener('click',()=>{ $('dateTime').value=localISO(new Date()); tab('add'); });
+  $('dateTime').value=localISO(new Date());
+  $('readingForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const db=Number($('dbValue').value), duration=$('duration').value?Number($('duration').value):null;
+    if(!Number.isFinite(db)||db<20||db>160){ alert('Enter a valid sound level between 20 and 160 dB(A).'); return; }
+    const dateTime=$('dateTime').value;
+    if(!dateTime){ alert('Select date and time.'); return; }
+    records.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),dateTime,location:$('location').value,siteName:$('siteName').value.trim(),db,zone:$('zone').value,period:$('period').value,duration,meter:$('meter').value.trim(),notes:$('notes').value.trim(),source:'manual'});
+    saveRecords(); $('readingForm').reset(); $('dateTime').value=localISO(new Date()); renderAll(); tab('overview'); alert('Reading saved on this browser.');
+  });
+  $('resetFormBtn').addEventListener('click',()=>setTimeout(()=>$('dateTime').value=localISO(new Date()),0));
+  function getReadFilter(){ return {location:$('filterLocation').value,source:$('filterSource').value,from:$('filterFrom').value,to:$('filterTo').value}; }
+  ['filterLocation','filterSource','filterFrom','filterTo'].forEach(id=>$(id).addEventListener('change',renderReadings));
+  $('clearFiltersBtn').addEventListener('click',()=>{['filterLocation','filterSource','filterFrom','filterTo'].forEach(id=>$(id).value='');renderReadings();});
+  function renderReadings(){
+    const rows=allFiltered(getReadFilter()).reverse(); const body=$('readingsBody');
+    if(!rows.length){body.innerHTML='<tr><td colspan="8" class="empty">No readings match these filters.</td></tr>';return;}
+    body.innerHTML=rows.map(r=>{const s=statusFor(r);return `<tr><td>${esc(fmtDate(r.dateTime))}</td><td><strong>${esc(r.location)}</strong><br><span style="color:#667085">${esc(r.siteName)}</span></td><td><strong>${Number(r.db).toFixed(1)}</strong></td><td>${esc(limits[r.zone]?.label||r.zone)} / ${r.period==='day'?'Day':'Night'}</td><td>${limitFor(r)} dB(A)</td><td><span class="pill ${s.cls}">${s.label}</span></td><td><span class="pill ${r.source==='simulated'?'neutral':'good'}">${r.source==='simulated'?'SIMULATED':'Manual'}</span></td><td><button class="btn danger" data-delete="${esc(r.id)}">Delete</button></td></tr>`}).join('');
+    body.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('Delete this reading?')){records=records.filter(r=>r.id!==b.dataset.delete);saveRecords();renderAll();}}));
+  }
+  function renderOverview(){
+    const rows=allFiltered(); const vals=rows.map(r=>Number(r.db)).filter(Number.isFinite); const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null; const max=rows.reduce((m,r)=>!m||Number(r.db)>Number(m.db)?r:m,null); const over=rows.filter(r=>Number(r.db)>limitFor(r)).length;
+    $('avgMetric').textContent=avg===null?'—':fmtDb(avg); $('maxMetric').textContent=max?fmtDb(max.db):'—'; $('maxFoot').textContent=max?`${max.location} · ${max.siteName}`:'Across current records'; $('countMetric').textContent=rows.length; $('overMetric').textContent=over; $('simFoot').textContent=`${rows.filter(r=>r.source==='simulated').length} simulated demo record(s)`; $('chartCount').textContent=`${rows.length} records`;
+    const latest=[...rows].reverse().slice(0,5);
+    $('latestList').innerHTML=latest.length?latest.map(r=>{const s=statusFor(r);return `<div class="site-row"><div class="site-dot" style="background:${s.cls==='bad'?'#d92d20':s.cls==='warn'?'#e99a17':'#12a06a'}"></div><div class="site-info"><strong>${esc(r.location)} · ${esc(r.siteName)}</strong><span>${esc(fmtDate(r.dateTime))} · ${r.source==='simulated'?'SIMULATED DEMO':'Manual'}</span></div><div class="site-db">${Number(r.db).toFixed(1)}<small>dB(A)</small></div></div>`}).join(''):'<div class="empty">No readings yet. Add a manual reading or load labelled demo data.</div>';
+    renderCharts(rows);
+  }
+  function renderCharts(rows){
+    const sorted=[...rows].sort((a,b)=>a.dateTime.localeCompare(b.dateTime)).slice(-30);
+    const ctx=$('trendChart');
+    if(trendChart)trendChart.destroy();
+    trendChart=new Chart(ctx,{type:'line',data:{labels:sorted.map(r=>new Date(r.dateTime).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})),datasets:[{label:'Noise (dB(A))',data:sorted.map(r=>r.db),borderColor:'#2457d6',backgroundColor:'rgba(36,87,214,.12)',fill:true,tension:.3,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,title:{display:true,text:'dB(A)'}},x:{ticks:{maxTicksLimit:7,maxRotation:0}}}}});
+    const avgs=locations.map(loc=>{const arr=rows.filter(r=>r.location===loc).map(r=>Number(r.db));return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;});
+    if(locationChart)locationChart.destroy();
+    locationChart=new Chart($('locationChart'),{type:'bar',data:{labels:locations,datasets:[{label:'Average dB(A)',data:avgs,backgroundColor:['#2457d6','#1e9b78','#e8a23b'],borderRadius:7,maxBarThickness:44}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,title:{display:true,text:'Average dB(A)'},suggestedMin:30},x:{grid:{display:false}}}}});
+  }
+  function renderLimits(){ $('limitsBody').innerHTML=Object.entries(limits).map(([key,v])=>`<tr><td>${esc(v.label||key)}</td><td><input aria-label="${esc(v.label)} day limit" type="number" min="0" max="150" step=".1" data-limit-zone="${key}" data-limit-period="day" value="${Number(v.day)}"></td><td><input aria-label="${esc(v.label)} night limit" type="number" min="0" max="150" step=".1" data-limit-zone="${key}" data-limit-period="night" value="${Number(v.night)}"></td></tr>`).join(''); }
+  $('saveLimitsBtn').addEventListener('click',()=>{for(const inp of $('limitsBody').querySelectorAll('input')){const v=Number(inp.value);if(!Number.isFinite(v)||v<0||v>150){alert('Limits must be between 0 and 150 dB(A).');return;}limits[inp.dataset.limitZone][inp.dataset.limitPeriod]=v;}saveLimits();renderAll();alert('Comparison limits saved. Existing records will be re-evaluated against the updated limits.');});
+  $('resetLimitsBtn').addEventListener('click',()=>{if(confirm('Restore default comparison values?')){limits=structuredClone(DEFAULT_LIMITS);saveLimits();renderLimits();renderAll();}});
+  function reportRows(){return allFiltered({location:$('reportLocation').value,from:$('reportFrom').value,to:$('reportTo').value});}
+  function renderReport(){
+    const rows=reportRows(), vals=rows.map(r=>Number(r.db)).filter(Number.isFinite), mean=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null, over=rows.filter(r=>Number(r.db)>limitFor(r)).length;
+    $('reportCount').textContent=rows.length;$('reportMean').textContent=mean===null?'—':fmtDb(mean);$('reportExceed').textContent=over;
+    const loc=$('reportLocation').value||'all assessment locations';
+    const dates=rows.length?`${rows[0].dateTime.slice(0,10)} to ${rows[rows.length-1].dateTime.slice(0,10)}`:'no dates';
+    const high=rows.reduce((m,r)=>!m||Number(r.db)>Number(m.db)?r:m,null), low=rows.reduce((m,r)=>!m||Number(r.db)<Number(m.db)?r:m,null);
+    let text=`NOISE POLLUTION ASSESSMENT REPORT\nGenerated: ${new Date().toLocaleString()}\nScope: ${loc}\nDate range: ${dates}\nRecords included: ${rows.length}\n\nSUMMARY\nMean of entered readings: ${mean===null?'No data':mean.toFixed(1)+' dB(A)'}\nHighest spot reading: ${high?Number(high.db).toFixed(1)+' dB(A) at '+high.location+' — '+high.siteName:'No data'}\nLowest spot reading: ${low?Number(low.db).toFixed(1)+' dB(A) at '+low.location+' — '+low.siteName:'No data'}\nRecords above configured comparison limit: ${over}\nSimulated demo records: ${rows.filter(r=>r.source==='simulated').length}\n\nINTERPRETATION\nStatus labels compare each entered value with the limit configured for its selected area category and period. These comparisons are screening aids only. Spot readings and their arithmetic mean do not by themselves establish compliance with a time-averaged LAeq standard.\n\nMETHOD AND LIMITATIONS\nReadings were manually entered by the user. Measurement equipment, calibration, microphone position, duration, weather and local conditions should be documented. Demo records, if any, are simulated and must not be presented as field measurements. Verify the applicable current CPCB / Indian rules and local notifications before formal conclusions.\n\nRECORD DETAILS\n`+ (rows.length?rows.map(r=>`${fmtDate(r.dateTime)} | ${r.location} | ${r.siteName} | ${Number(r.db).toFixed(1)} dB(A) | ${limits[r.zone]?.label||r.zone} ${r.period} limit ${limitFor(r)} | ${statusFor(r).label} | ${r.source==='simulated'?'SIMULATED DEMO':'Manual'}${r.notes?' | Notes: '+r.notes:''}`).join('\n'):'No readings available.');
+    $('reportText').textContent=text;
+  }
+  ['reportLocation','reportFrom','reportTo'].forEach(id=>$(id).addEventListener('change',renderReport));$('generateReportBtn').addEventListener('click',renderReport);
+  $('printReportBtn').addEventListener('click',()=>{renderReport();window.print();});
+  $('copyReportBtn').addEventListener('click',async()=>{renderReport();try{await navigator.clipboard.writeText($('reportText').textContent);alert('Report text copied.');}catch{alert('Copy is unavailable in this browser. Select the report text and copy it manually.');}});
+  function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
+  function exportCSV(rows){const header=['DateTime','Location','SiteName','dB(A)','Zone','Period','ConfiguredLimit_dB(A)','Status','Source','DurationMinutes','MeterMethod','Notes'];const lines=[header,...rows.map(r=>[r.dateTime,r.location,r.siteName,r.db,limits[r.zone]?.label||r.zone,r.period,limitFor(r),statusFor(r).label,r.source,r.duration??'',r.meter,r.notes])].map(row=>row.map(csvEscape).join(','));const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='noisewatch-readings-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+  $('exportCsvBtn').addEventListener('click',()=>exportCSV(allFiltered()));$('readingsCsvBtn').addEventListener('click',()=>exportCSV(allFiltered(getReadFilter())));
+  $('loadDemoBtn').addEventListener('click',()=>{if(!confirm('Add clearly labelled simulated demonstration records? These are not real measurements.'))return;const now=new Date();const demo=[['College','Main gate',62,'commercial','day',-3],['College','Library courtyard',48,'silence','day',-1],['Hospital','Emergency entrance',59,'silence','day',-2],['Hospital','Side street',43,'residential','night',-1],['Traffic Junction','Signal crossing',78,'commercial','day',0],['Traffic Junction','Bus stop',71,'commercial','day',-4],['College','Classroom block',46,'residential','day',-5],['Traffic Junction','Roadside after 10 pm',61,'commercial','night',-2]];
+    demo.forEach((d,i)=>{const dt=new Date(now.getTime()-(demo.length-i)*3600000);records.push({id:'demo-'+Date.now()+'-'+i,dateTime:localISO(dt),location:d[0],siteName:d[1],db:d[2],zone:d[3],period:d[4],duration:15,meter:'SIMULATED — not measured',notes:'Simulated sample data for interface demonstration only.',source:'simulated'});});saveRecords();renderAll();alert('Demo records added. They are labelled SIMULATED and are not real measurements.');});
+  $('clearDataBtn').addEventListener('click',()=>{if(confirm('Permanently delete all readings saved in this browser? Export CSV first if you need a backup.')){records=[];saveRecords();renderAll();}});
+  function renderAll(){renderOverview();renderReadings();renderLimits();renderReport();}
+  renderAll();
+})();
+</script>
+</body>
+</html>
