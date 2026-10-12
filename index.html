@@ -200,8 +200,8 @@
     const rows=[]; let row=[], field='', quoted=false;
     for(let i=0;i<text.length;i++){
       const c=text[i], next=text[i+1];
-      if(c==='"' && quoted && next==='"'){field+='"';i++;}
-      else if(c==='"'){quoted=!quoted;}
+      if(c=='"' && quoted && next=='"'){field+='"';i++;}
+      else if(c=='"'){quoted=!quoted;}
       else if(c===',' && !quoted){row.push(field);field='';}
       else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&next==='\n')i++;row.push(field);if(row.some(x=>x.trim()!==''))rows.push(row);row=[];field='';}
       else field+=c;
